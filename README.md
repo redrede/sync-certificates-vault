@@ -2,6 +2,10 @@
 
 The synchronization java application was running and when there is a creation or alteration of the certificates, it will automatically send them to the Vault.
 
+java -jar sync-certificates-vault.jar <certificates-path> <certificates-extension> <vault-address> <vault-token>  <vault-path>
+
+Ex.:
+
 java -jar sync-certificates-vault.jar "/etc/letsencrypt/live" "pem" "http://127.0.0.1:1234" "myroot" "kv/certificates"
 
 Note: Files created or changed prior to running the app will not be uploaded.
