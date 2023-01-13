@@ -2,7 +2,7 @@
 
 The synchronization java application was running and when there is a creation or alteration of the certificates, it will automatically send them to the Vault.
 
-java -jar sync-certificates-vault.jar <certificates-path> <certificates-extension> <vault-address> <vault-token>  <vault-path>
+java -jar sync-certificates-vault.jar certificates-path certificates-extension vault-address vault-token  vault-path
 
 Ex.:
 
