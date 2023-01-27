@@ -2,7 +2,9 @@
 
 The synchronization java application must be running and when certificates are created or changed, it will automatically send them to the Vault.
 
-java -jar sync-certificates-vault.jar certificates-path certificates-extension vault-address vault-token  vault-path
+java -jar sync-certificates-vault.jar certificates-path certificates-extension vault-address vault-token  vault-path [dynamic-path]
+
+dynamic-path: defines the folder, where a file with the domain name contains a part of the used dynamic path on the vault path.
 
 Ex.:
 
