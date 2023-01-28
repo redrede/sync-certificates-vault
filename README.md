@@ -38,6 +38,6 @@ DYNAMIC_PATH_FOLDER - default value: /etc/letsencrypt/meta"
 
 ## Run:
 
-docker run -d -v /etc/letsencrypt/live:/etc/letsencrypt/live -v /etc/letsencrypt/meta:/etc/letsencrypt/meta redrede/sync-certificates-vault 
+docker run -d -v /etc/letsencrypt/live:/etc/letsencrypt/live -v /etc/letsencrypt/meta:/etc/letsencrypt/meta ghcr.io/redrede/sync-certificates-vault:main
 
 
