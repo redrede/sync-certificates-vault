@@ -35,7 +35,7 @@ public class SyncCertificatesVault {
                     System.out.println("certificates-extension: " + args[1]);
                     System.out.println("vault-address " + args[2]);
                     // hide token
-                    System.out.println("vault-token: " + args[3].replaceAll("[A-Za-z0-9]", "*") );
+                    System.out.println("vault-token: " + args[3].replaceAll("[A-Za-z0-9]", "*"));
                     System.out.println("vault-path: " + args[4]);
                     syncFiles(args[0], args[1], args[2], args[3], args[4], null);
                     break;
@@ -45,7 +45,7 @@ public class SyncCertificatesVault {
                     System.out.println("certificates-extension: " + args[1]);
                     System.out.println("vault-address " + args[2]);
                     // hide token
-                    System.out.println("vault-token: " + args[3].replaceAll("[A-Za-z0-9]", "*") );
+                    System.out.println("vault-token: " + args[3].replaceAll("[A-Za-z0-9]", "*"));
                     System.out.println("vault-path: " + args[4]);
                     System.out.println("dynamic-path: " + args[5]);
                     syncFiles(args[0], args[1], args[2], args[3], args[4], args[5]);
@@ -59,7 +59,7 @@ public class SyncCertificatesVault {
                     break;
             }
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            System.out.println("X - " + e.getMessage());
         }
     }
 
@@ -126,11 +126,11 @@ public class SyncCertificatesVault {
             System.out.println("Start Certificate Sync");
 
         } catch (IOException e) {
-            System.err.println(e.getMessage());
+            System.err.println("X - " + e.getMessage());
         } catch (InterruptedException e) {
-            System.err.println(e.getMessage());
+            System.err.println("X - " + e.getMessage());
         } catch (Exception e) {
-            System.err.println(e.getMessage());
+            System.err.println("X - " + e.getMessage());
         }
     }
 
@@ -172,7 +172,7 @@ public class SyncCertificatesVault {
             final VaultConfig config = new VaultConfig()
                     .address(vaultAddress)
                     .token(vaultToken)
-                    .build();          
+                    .build();
             final Vault vault = new Vault(config, 2);
             if (create) {
                 String content = FileUtils.readFileToString(certificate, StandardCharsets.UTF_8);
@@ -192,7 +192,7 @@ public class SyncCertificatesVault {
             }
 
         } catch (VaultException | IOException ex) {
-            System.err.println(ex.getMessage());
+            System.err.println("X - " + ex.getMessage());
         }
 
     }
