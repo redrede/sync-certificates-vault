@@ -1,4 +1,4 @@
-# Sync certificates to Vault
+# Sync certificates to HashiCorp Vault
 
 The synchronization java application must be running and when certificates are created or changed, it will automatically send them to the Vault.
 
