@@ -18,18 +18,26 @@ docker run --cap-add=IPC_LOCK -e 'VAULT_DEV_ROOT_TOKEN_ID=myroot' -e 'VAULT_DEV_
 
 # Docker:
 
-Build:
+## Build:
+
 docker build -t redrede/sync-certificates-vault .
 
-Env:
-CERTIFICATES_FOLDER - default value: 
-CERTIFICATES_EXTENSION - default value: 
+## Env:
+
+CERTIFICATES_FOLDER - default value: /etc/letsencrypt/live
+
+CERTIFICATES_EXTENSION - default value: pem
+
 VAULT_ADDRESS - default value: http://172.17.0.1:1234
+
 VAULT_PATH - default value: kv/certificates
+
 VAULT_TOKEN - default value: myroot
+
 DYNAMIC_PATH_FOLDER - default value: /etc/letsencrypt/meta"
 
-Run:
+## Run:
+
 docker run -d -v /etc/letsencrypt/live:/etc/letsencrypt/live -v /etc/letsencrypt/meta:/etc/letsencrypt/meta redrede/sync-certificates-vault 
 
 
