@@ -61,4 +61,12 @@
         </plugins>
         <finalName>sync-certificates-vault</finalName>       
     </build>
+    
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/redrede/sync-certificates-vault</url>
+        </repository>
+    </distributionManagement>
 </project>
