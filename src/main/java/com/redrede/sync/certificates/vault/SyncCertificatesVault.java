@@ -34,7 +34,8 @@ public class SyncCertificatesVault {
                     System.out.println("certificates-path: " + args[0]);
                     System.out.println("certificates-extension: " + args[1]);
                     System.out.println("vault-address " + args[2]);
-                    System.out.println("vault-token: " + args[3]);
+                    // hide token
+                    System.out.println("vault-token: " + args[3].replaceAll("[A-Za-z0-9]", "*") );
                     System.out.println("vault-path: " + args[4]);
                     syncFiles(args[0], args[1], args[2], args[3], args[4], null);
                     break;
@@ -43,7 +44,8 @@ public class SyncCertificatesVault {
                     System.out.println("certificates-path: " + args[0]);
                     System.out.println("certificates-extension: " + args[1]);
                     System.out.println("vault-address " + args[2]);
-                    System.out.println("vault-token: " + args[3]);
+                    // hide token
+                    System.out.println("vault-token: " + args[3].replaceAll("[A-Za-z0-9]", "*") );
                     System.out.println("vault-path: " + args[4]);
                     System.out.println("dynamic-path: " + args[5]);
                     syncFiles(args[0], args[1], args[2], args[3], args[4], args[5]);
@@ -61,17 +63,16 @@ public class SyncCertificatesVault {
         }
     }
 
-    
     /**
      * Monitors change in certificate folder
-     * 
+     *
      * @param certificatesPath
      * @param certificatesExtension
      * @param vaultAddress
      * @param vaultToken
      * @param vaultPath
      * @param dynamicPath
-     * @throws IOException 
+     * @throws IOException
      */
     public static void syncFiles(String certificatesPath, String certificatesExtension, String vaultAddress, String vaultToken, String vaultPath, String dynamicPath) throws IOException {
         //get the file object
@@ -85,33 +86,34 @@ public class SyncCertificatesVault {
         observer.addListener(new FileAlterationListenerAdaptor() {
 
             @Override
-            public void onDirectoryCreate(File file) {
-
+            public void onDirectoryCreate(File srcFile) {
+                System.out.println("X - Folder creation skipped: " + srcFile);
             }
 
             @Override
-            public void onDirectoryDelete(File file) {
-
+            public void onDirectoryDelete(File srcFile) {
+                System.out.println("V - Folder delete: " + srcFile);
+                sendVault(vaultAddress, vaultToken, vaultPath, srcFile.getName().replace(certificatesPath, "").replace("/", ""), srcFile, dynamicPath, false);
             }
 
             @Override
             public void onFileCreate(File srcFile) {
                 if (extensionsList.contains(FilenameUtils.getExtension(srcFile.getName()))) {
-                    System.out.println("File create: " + srcFile);
-                    sendVault(vaultAddress, vaultToken, vaultPath, srcFile.getParent().replace(certificatesPath, "").replace("/", ""), srcFile, dynamicPath);
+                    System.out.println("V - File create: " + srcFile);
+                    sendVault(vaultAddress, vaultToken, vaultPath, srcFile.getParent().replace(certificatesPath, "").replace("/", ""), srcFile, dynamicPath, true);
                 }
             }
 
             @Override
-            public void onFileDelete(File file) {
-
+            public void onFileDelete(File srcFile) {
+                System.out.println("X - File deleted skipped: " + srcFile);
             }
 
             @Override
             public void onFileChange(File srcFile) {
                 if (extensionsList.contains(FilenameUtils.getExtension(srcFile.getName()))) {
-                    System.out.println("File change: " + srcFile);
-                    sendVault(vaultAddress, vaultToken, vaultPath, srcFile.getParent().replace(certificatesPath, "").replace("/", ""), srcFile, dynamicPath);
+                    System.out.println("V - File change: " + srcFile);
+                    sendVault(vaultAddress, vaultToken, vaultPath, srcFile.getParent().replace(certificatesPath, "").replace("/", ""), srcFile, dynamicPath, true);
                 }
             }
 
@@ -121,7 +123,7 @@ public class SyncCertificatesVault {
 
         try {
             monitor.start();
-            System.out.println("Start file sync");
+            System.out.println("Start Certificate Sync");
 
         } catch (IOException e) {
             System.err.println(e.getMessage());
@@ -133,55 +135,61 @@ public class SyncCertificatesVault {
     }
 
     /**
-     * Gets through the contents of the file with the name of the domain present in the folder defined in "dynamic-path", a dynamic path if any.
-     * 
+     * Gets through the contents of the file with the name of the domain present
+     * in the folder defined in "dynamic-path", a dynamic path if any.
+     *
      * @param folder
      * @param domain
-     * @return 
+     * @return
      */
     public static String dynamicPath(String folder, String domain) {
         try {
             if (folder != null) {
                 Path path = Paths.get(folder + "/" + domain);
                 if (Files.exists(path)) {
-                    return  "/" + new String(Files.readAllBytes(path)).replaceAll("[^A-Za-z0-9-_]","") + "/";
+                    return "/" + new String(Files.readAllBytes(path)).replaceAll("[^A-Za-z0-9-_]", "") + "/";
                 }
             }
         } catch (IOException ex) {
-            System.err.println(ex.getMessage());            
+            System.err.println(ex.getMessage());
         }
         return "/";
     }
 
     /**
-     * Send certificate files to HashiCorp Vault
-     * 
+     * Send certificate files and delete secret to HashiCorp Vault
+     *
      * @param vaultAddress
      * @param vaultToken
      * @param vaultPath
      * @param domain
      * @param certificate
-     * @param dynamicPath 
+     * @param dynamicPath
+     * @param create
      */
-    public static void sendVault(String vaultAddress, String vaultToken, String vaultPath, String domain, File certificate, String dynamicPath) {
+    public static void sendVault(String vaultAddress, String vaultToken, String vaultPath, String domain, File certificate, String dynamicPath, boolean create) {
         try {
             final VaultConfig config = new VaultConfig()
                     .address(vaultAddress)
                     .token(vaultToken)
-                    .build();
-
-            String content = FileUtils.readFileToString(certificate, StandardCharsets.UTF_8);
-
+                    .build();          
             final Vault vault = new Vault(config, 2);
-            final Map<String, Object> secrets = new HashMap<>();
-            Map<String, String> currentSecrets = vault.logical().read(vaultPath + dynamicPath(dynamicPath, domain) + domain).getData();
-            if (currentSecrets != null && !currentSecrets.isEmpty()) {
-                secrets.putAll(currentSecrets);
+            if (create) {
+                String content = FileUtils.readFileToString(certificate, StandardCharsets.UTF_8);
+                final Map<String, Object> secrets = new HashMap<>();
+                Map<String, String> currentSecrets = vault.logical().read(vaultPath + dynamicPath(dynamicPath, domain) + domain).getData();
+                if (currentSecrets != null && !currentSecrets.isEmpty()) {
+                    secrets.putAll(currentSecrets);
+                }
+                secrets.put(certificate.getName(), content);
+                // Write operation
+                vault.logical().write(vaultPath + dynamicPath(dynamicPath, domain) + domain, secrets);
+                System.out.println("V - Send file " + certificate.getName() + " to " + vaultPath + dynamicPath(dynamicPath, domain) + domain + " -> " + vaultAddress);
+            } else {
+                // Delete operation
+                vault.logical().delete(vaultPath + dynamicPath(dynamicPath, domain) + domain);
+                System.out.println("V - Delete secret " + vaultPath + dynamicPath(dynamicPath, domain) + domain + " -> " + vaultAddress);
             }
-            secrets.put(certificate.getName(), content);
-            // Write operation
-            vault.logical().write(vaultPath + dynamicPath(dynamicPath, domain) + domain, secrets);
-            System.out.println("Send file " + certificate.getName() + " to " + vaultPath + dynamicPath(dynamicPath, domain) + domain + " -> " + vaultAddress);
 
         } catch (VaultException | IOException ex) {
             System.err.println(ex.getMessage());
