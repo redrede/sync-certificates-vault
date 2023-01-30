@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.monitor.FileAlterationListenerAdaptor;
@@ -151,7 +152,7 @@ public class SyncCertificatesVault {
                 }
             }
         } catch (IOException ex) {
-            System.err.println(ex.getMessage());
+            System.err.println("X - " + ex.getMessage());
         }
         return "/";
     }
@@ -169,11 +170,26 @@ public class SyncCertificatesVault {
      */
     public static void sendVault(String vaultAddress, String vaultToken, String vaultPath, String domain, File certificate, String dynamicPath, boolean create) {
         try {
-            final VaultConfig config = new VaultConfig()
-                    .address(vaultAddress)
-                    .token(vaultToken)
-                    .build();
-            final Vault vault = new Vault(config, 2);
+            Vault vault;
+            if (vaultToken.startsWith("approle")) {
+                StringTokenizer approle = new StringTokenizer(vaultToken, ":");
+                String path = approle.nextToken();
+                String roleId = approle.nextToken();
+                String secretId = approle.nextToken();
+                String token = new Vault(new VaultConfig().address(vaultAddress).build(), 2).auth().loginByAppRole(path, roleId, secretId).getAuthClientToken();
+                VaultConfig config = new VaultConfig()
+                        .address(vaultAddress)
+                        .token(token)
+                        .build();
+                vault = new Vault(config, 2);
+            } else {
+                VaultConfig config = new VaultConfig()
+                        .address(vaultAddress)
+                        .token(vaultToken)
+                        .build();
+                vault = new Vault(config, 2);
+            }
+
             if (create) {
                 String content = FileUtils.readFileToString(certificate, StandardCharsets.UTF_8);
                 final Map<String, Object> secrets = new HashMap<>();
