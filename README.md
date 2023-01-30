@@ -2,7 +2,7 @@
 
 The synchronization java application must be running and when certificates are created or changed, it will automatically send them to the Vault.
 
-java -jar sync-certificates-vault.jar certificates-path certificates-extension vault-address vault-token  vault-path [dynamic-path]
+java -jar sync-certificates-vault.jar "&lt;certificates-path&gt;" "&lt;certificates-extension&gt;" "&lt;vault-address&gt;" "&lt;vault-token&gt;" "&lt;vault-path&gt;" ["&lt;dynamic-path&gt;"]
 
 dynamic-path: defines the folder, where a file with the domain name contains a part of the used dynamic path on the vault path.
 
@@ -14,7 +14,7 @@ Note: Files created or changed prior to running the app will not be uploaded.
 
 ## Added support for Approle authentication
 
-java -jar sync-certificates-vault.jar certificates-path certificates-extension vault-address approle:&lt;role-id&gt;:&lt;secret-id&gt; vault-path [dynamic-path]
+java -jar sync-certificates-vault.jar "&lt;certificates-path&gt;" "&lt;certificates-extension&gt;" "&lt;vault-address&gt;" "&lt;approle:&lt;role-id&gt;:&lt;secret-id&gt;" "&lt;vault-path&gt;" ["&lt;dynamic-path&gt;"]
 
 Ex.:
 
