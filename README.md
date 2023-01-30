@@ -12,6 +12,15 @@ java -jar sync-certificates-vault.jar "/etc/letsencrypt/live" "pem" "http://127.
 
 Note: Files created or changed prior to running the app will not be uploaded.
 
+## Added support for Approle authentication
+
+java -jar sync-certificates-vault.jar certificates-path certificates-extension vault-address approle:<role-id>:<secret-id> vault-path [dynamic-path]
+
+Ex.:
+
+java -jar sync-certificates-vault.jar "/etc/letsencrypt/live" "pem" "http://127.0.0.1:1234" "approle:fae47a5f-17b1-7ffd-646b-16371515a878:72e44acb-b987-52f7-735e-b01dd6e91ab9" "kv/certificates"
+
+
 # Test:
 
 docker run --cap-add=IPC_LOCK -e 'VAULT_DEV_ROOT_TOKEN_ID=myroot' -e 'VAULT_DEV_LISTEN_ADDRESS=0.0.0.0:1234' -p 1234:1234 vault
