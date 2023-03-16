@@ -16,7 +16,7 @@ Note: Files created or changed prior to running the app will not be uploaded.
 
 ## Added support for Approle authentication
 
-java -jar sync-certificates-vault.jar "&lt;mode&gt;" "&lt;certificates-path&gt;" "&lt;certificates-extension&gt;" "&lt;vault-address&gt;" "&lt;approle:&lt;role-id&gt;:&lt;secret-id&gt;" "&lt;vault-path&gt;" ["&lt;dynamic-path&gt;"]
+java -jar sync-certificates-vault.jar "&lt;mode&gt;" "&lt;certificates-path&gt;" "&lt;certificates-extension&gt;" "&lt;vault-address&gt;" "approle:&lt;role-id&gt;:&lt;secret-id&gt;" "&lt;vault-path&gt;" ["&lt;dynamic-path&gt;"]
 
 Ex.:
 
