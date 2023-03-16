@@ -35,6 +35,8 @@ docker build -t redrede/sync-certificates-vault .
 
 ## Env:
 
+MODE - default value: file2Vault
+
 CERTIFICATES_FOLDER - default value: /etc/letsencrypt/live
 
 CERTIFICATES_EXTENSION - default value: pem
