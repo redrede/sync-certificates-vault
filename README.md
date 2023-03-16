@@ -16,11 +16,11 @@ Note: Files created or changed prior to running the app will not be uploaded.
 
 ## Added support for Approle authentication
 
-java -jar sync-certificates-vault.jar "&lt;certificates-path&gt;" "&lt;certificates-extension&gt;" "&lt;vault-address&gt;" "&lt;approle:&lt;role-id&gt;:&lt;secret-id&gt;" "&lt;vault-path&gt;" ["&lt;dynamic-path&gt;"]
+java -jar sync-certificates-vault.jar "&lt;mode&gt;" "&lt;certificates-path&gt;" "&lt;certificates-extension&gt;" "&lt;vault-address&gt;" "&lt;approle:&lt;role-id&gt;:&lt;secret-id&gt;" "&lt;vault-path&gt;" ["&lt;dynamic-path&gt;"]
 
 Ex.:
 
-java -jar sync-certificates-vault.jar "/etc/letsencrypt/live" "pem" "http://127.0.0.1:1234" "approle:fae47a5f-17b1-7ffd-646b-16371515a878:72e44acb-b987-52f7-735e-b01dd6e91ab9" "kv/certificates"
+java -jar sync-certificates-vault.jar "file2Vault" "/etc/letsencrypt/live" "pem" "http://127.0.0.1:1234" "approle:fae47a5f-17b1-7ffd-646b-16371515a878:72e44acb-b987-52f7-735e-b01dd6e91ab9" "kv/certificates"
 
 
 # Test:
