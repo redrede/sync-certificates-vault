@@ -1,5 +1,9 @@
 #!/bin/bash
 
+if [ -z "$MODE" ]; then
+    export MODE="file2Vault"
+fi
+
 if [ -z "$CERTIFICATES_FOLDER" ]; then
     export CERTIFICATES_FOLDER="/etc/letsencrypt/live"
 fi
@@ -24,4 +28,4 @@ if [ -z "$DYNAMIC_PATH_FOLDER" ]; then
     export DYNAMIC_PATH_FOLDER="/etc/letsencrypt/meta"
 fi
 
-exec java -jar sync-certificates-vault.jar "${CERTIFICATES_FOLDER}" "${CERTIFICATES_EXTENSION}" "${VAULT_ADDRESS}" "${VAULT_TOKEN}" "${VAULT_PATH}" "$DYNAMIC_PATH_FOLDER"
+exec java -jar sync-certificates-vault.jar "${MODE}" "${CERTIFICATES_FOLDER}" "${CERTIFICATES_EXTENSION}" "${VAULT_ADDRESS}" "${VAULT_TOKEN}" "${VAULT_PATH}" "$DYNAMIC_PATH_FOLDER"

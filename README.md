@@ -2,13 +2,15 @@
 
 The synchronization java application must be running and when certificates are created or changed, it will automatically send them to the Vault.
 
-java -jar sync-certificates-vault.jar "&lt;certificates-path&gt;" "&lt;certificates-extension&gt;" "&lt;vault-address&gt;" "&lt;vault-token&gt;" "&lt;vault-path&gt;" ["&lt;dynamic-path&gt;"]
+java -jar sync-certificates-vault.jar "&lt;mode&gt;" "&lt;certificates-path&gt;" "&lt;certificates-extension&gt;" "&lt;vault-address&gt;" "&lt;vault-token&gt;" "&lt;vault-path&gt;" ["&lt;dynamic-path&gt;"]
 
 dynamic-path: defines the folder, where a file with the domain name contains a part of the used dynamic path on the vault path.
 
+mode: defines whether the synchronization will be from certificate to vault(file2Vault) or from vault to certificate(vault2File)   
+
 Ex.:
 
-java -jar sync-certificates-vault.jar "/etc/letsencrypt/live" "pem" "http://127.0.0.1:1234" "myroot" "kv/certificates"
+java -jar sync-certificates-vault.jar "file2Vault" "/etc/letsencrypt/live" "pem" "http://127.0.0.1:1234" "myroot" "kv/certificates"
 
 Note: Files created or changed prior to running the app will not be uploaded.
 
