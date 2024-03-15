@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.redrede</groupId>
     <artifactId>sync-certificates-vault</artifactId>
-    <version>v5</version>
+    <version>v6</version>
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
