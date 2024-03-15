@@ -20,6 +20,8 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.monitor.FileAlterationListenerAdaptor;
 import org.apache.commons.io.monitor.FileAlterationMonitor;
 import org.apache.commons.io.monitor.FileAlterationObserver;
+import java.util.logging.Logger;
+
 
 /**
  * Sync certificates to Vault or Vault to certificates
@@ -28,63 +30,65 @@ import org.apache.commons.io.monitor.FileAlterationObserver;
  */
 public class SyncCertificatesVault {
 
+    private static final Logger logger = Logger.getLogger(SyncCertificatesVault.class.getName());
+
     public static void main(String[] args) {
         try {
             switch (args.length) {
                 case 6:
-                    System.out.println("Parameters");
-                    System.out.println("mode: " + args[0]); //file2Vault | vault2File
-                    System.out.println("certificates-path: " + args[1]);
-                    System.out.println("certificates-extension: " + args[2]);
-                    System.out.println("vault-address " + args[3]);
+                    logger.info("Parameters");
+                    logger.info("mode: " + args[0]); //file2Vault | vault2File
+                    logger.info("certificates-path: " + args[1]);
+                    logger.info("certificates-extension: " + args[2]);
+                    logger.info("vault-address " + args[3]);
                     // hide token
-                    System.out.println("vault-token: " + args[4].replaceAll("[A-Za-z0-9]", "*"));
-                    System.out.println("vault-path: " + args[5]);
+                    logger.info("vault-token: " + args[4].replaceAll("[A-Za-z0-9]", "*"));
+                    logger.info("vault-path: " + args[5]);
                     if (args[0].equalsIgnoreCase("file2Vault")) {
                         syncFiles(args[1], args[2], args[3], args[4], args[5], null);
                     } else if (args[0].equalsIgnoreCase("vault2File")) {
                         syncVault(args[1], args[2], args[3], args[4], args[5]);
                     } else {
-                        System.err.println("Error:");
-                        System.err.println("Enter mode parameter correctly");
-                        System.err.println(" file2Vault -> sync file to vault");
-                        System.err.println(" vault2File -> sync vault to file");
-                        System.out.println("java -jar sync-certificates-vault.jar <mode> <certificates-path> <certificates-extension> <vault-address> <vault-token>  <vault-path> [<dynamic-path>]");
-                        System.out.println("Example: ");
-                        System.out.println("java -jar sync-certificates-vault.jar \"file2Vault\" \"/etc/letsencrypt/live\" \"pem\" \"http://127.0.0.1:1234\" \"myroot\" \"secrets/certificates\"  \"/etc/letsencrypt/dynamic\"");
+                        logger.severe("Error:");
+                        logger.severe("Enter mode parameter correctly");
+                        logger.severe(" file2Vault -> sync file to vault");
+                        logger.severe(" vault2File -> sync vault to file");
+                        logger.info("java -jar sync-certificates-vault.jar <mode> <certificates-path> <certificates-extension> <vault-address> <vault-token>  <vault-path> [<dynamic-path>]");
+                        logger.info("Example: ");
+                        logger.info("java -jar sync-certificates-vault.jar \"file2Vault\" \"/etc/letsencrypt/live\" \"pem\" \"http://127.0.0.1:1234\" \"myroot\" \"secrets/certificates\"  \"/etc/letsencrypt/dynamic\"");
                     }
                     break;
                 case 7:
-                    System.out.println("Parameters");
-                    System.out.println("mode: " + args[0]); //file2Vault | vault2File
-                    System.out.println("certificates-path: " + args[1]);
-                    System.out.println("certificates-extension: " + args[2]);
-                    System.out.println("vault-address " + args[3]);
+                    logger.info("Parameters");
+                    logger.info("mode: " + args[0]); //file2Vault | vault2File
+                    logger.info("certificates-path: " + args[1]);
+                    logger.info("certificates-extension: " + args[2]);
+                    logger.info("vault-address " + args[3]);
                     // hide token
-                    System.out.println("vault-token: " + args[4].replaceAll("[A-Za-z0-9]", "*"));
-                    System.out.println("vault-path: " + args[5]);
-                    System.out.println("dynamic-path: " + args[6]);
+                    logger.info("vault-token: " + args[4].replaceAll("[A-Za-z0-9]", "*"));
+                    logger.info("vault-path: " + args[5]);
+                    logger.info("dynamic-path: " + args[6]);
                     if (args[0].equalsIgnoreCase("file2Vault")) {
                         syncFiles(args[1], args[2], args[3], args[4], args[5], args[6]);
                     } else {
-                        System.err.println("Error:");
-                        System.err.println("Enter mode parameter correctly");
-                        System.err.println(" vault2File does not support \"dynamic-path\"");
-                        System.out.println("java -jar sync-certificates-vault.jar <mode> <certificates-path> <certificates-extension> <vault-address> <vault-token>  <vault-path> [<dynamic-path>]");
-                        System.out.println("Example: ");
-                        System.out.println("java -jar sync-certificates-vault.jar \"file2Vault\" \"/etc/letsencrypt/live\" \"pem\" \"http://127.0.0.1:1234\" \"myroot\" \"secrets/certificates\"  \"/etc/letsencrypt/dynamic\"");
+                        logger.severe("Error:");
+                        logger.severe("Enter mode parameter correctly");
+                        logger.severe(" vault2File does not support \"dynamic-path\"");
+                        logger.info("java -jar sync-certificates-vault.jar <mode> <certificates-path> <certificates-extension> <vault-address> <vault-token>  <vault-path> [<dynamic-path>]");
+                        logger.info("Example: ");
+                        logger.info("java -jar sync-certificates-vault.jar \"file2Vault\" \"/etc/letsencrypt/live\" \"pem\" \"http://127.0.0.1:1234\" \"myroot\" \"secrets/certificates\"  \"/etc/letsencrypt/dynamic\"");
                     }
                     break;
                 default:
-                    System.err.println("Error:");
-                    System.err.println("Enter the parameters");
-                    System.out.println("java -jar sync-certificates-vault.jar <mode> <certificates-path> <certificates-extension> <vault-address> <vault-token>  <vault-path> [<dynamic-path>]");
-                    System.out.println("Example: ");
-                    System.out.println("java -jar sync-certificates-vault.jar \"file2Vault\" \"/etc/letsencrypt/live\" \"pem\" \"http://127.0.0.1:1234\" \"myroot\" \"secrets/certificates\"  \"/etc/letsencrypt/dynamic\"");
+                    logger.severe("Error:");
+                    logger.severe("Enter the parameters");
+                    logger.info("java -jar sync-certificates-vault.jar <mode> <certificates-path> <certificates-extension> <vault-address> <vault-token>  <vault-path> [<dynamic-path>]");
+                    logger.info("Example: ");
+                    logger.info("java -jar sync-certificates-vault.jar \"file2Vault\" \"/etc/letsencrypt/live\" \"pem\" \"http://127.0.0.1:1234\" \"myroot\" \"secrets/certificates\"  \"/etc/letsencrypt/dynamic\"");
                     break;
             }
         } catch (IOException e) {
-            System.err.println("X - " + e.getMessage());
+            logger.severe("X - " + e.getMessage());
         }
     }
 
@@ -112,32 +116,32 @@ public class SyncCertificatesVault {
 
             @Override
             public void onDirectoryCreate(File srcFile) {
-                System.out.println("X - Folder creation skipped: " + srcFile);
+                logger.info("X - Folder creation skipped: " + srcFile);
             }
 
             @Override
             public void onDirectoryDelete(File srcFile) {
-                System.out.println("V - Folder delete: " + srcFile);
+                logger.info("V - Folder delete: " + srcFile);
                 sendVault(vaultAddress, vaultToken, vaultPath, srcFile.getName().replace(certificatesPath, "").replace("/", ""), srcFile, dynamicPath, false);
             }
 
             @Override
             public void onFileCreate(File srcFile) {
                 if (extensionsList.contains(FilenameUtils.getExtension(srcFile.getName()))) {
-                    System.out.println("V - File create: " + srcFile);
+                    logger.info("V - File create: " + srcFile);
                     sendVault(vaultAddress, vaultToken, vaultPath, srcFile.getParent().replace(certificatesPath, "").replace("/", ""), srcFile, dynamicPath, true);
                 }
             }
 
             @Override
             public void onFileDelete(File srcFile) {
-                System.out.println("X - File deleted skipped: " + srcFile);
+                logger.info("X - File deleted skipped: " + srcFile);
             }
 
             @Override
             public void onFileChange(File srcFile) {
                 if (extensionsList.contains(FilenameUtils.getExtension(srcFile.getName()))) {
-                    System.out.println("V - File change: " + srcFile);
+                    logger.info("V - File change: " + srcFile);
                     sendVault(vaultAddress, vaultToken, vaultPath, srcFile.getParent().replace(certificatesPath, "").replace("/", ""), srcFile, dynamicPath, true);
                 }
             }
@@ -148,13 +152,13 @@ public class SyncCertificatesVault {
 
         try {
             monitor.start();
-            System.out.println("Start Certificate Sync Files to Vault");
+            logger.info("Start Certificate Sync Files to Vault");
         } catch (IOException e) {
-            System.err.println("X - " + e.getMessage());
+            logger.severe("X - " + e.getMessage());
         } catch (InterruptedException e) {
-            System.err.println("X - " + e.getMessage());
+            logger.severe("X - " + e.getMessage());
         } catch (Exception e) {
-            System.err.println("X - " + e.getMessage());
+            logger.severe("X - " + e.getMessage());
         }
     }
 
@@ -170,7 +174,7 @@ public class SyncCertificatesVault {
      */
     public static void syncVault(String certificatesPath, String certificatesExtension, String vaultAddress, String vaultToken, String vaultPath) throws IOException {
         try {
-            System.out.println("Start Certificate Sync Vault to files - every 10 minutes");
+            logger.info("Start Certificate Sync Vault to files - every 10 minutes");
             while (true) {
                 List<String> list = getVaultList(vaultAddress, vaultToken, vaultPath);
                 for (String domain : list) {
@@ -179,9 +183,9 @@ public class SyncCertificatesVault {
                 Thread.sleep(600000);
             }
         } catch (InterruptedException e) {
-            System.err.println("X - " + e.getMessage());
+            logger.severe("X - " + e.getMessage());
         } catch (Exception e) {
-            System.err.println("X - " + e.getMessage());
+            logger.severe("X - " + e.getMessage());
         }
     }
 
@@ -202,7 +206,7 @@ public class SyncCertificatesVault {
                 }
             }
         } catch (IOException ex) {
-            System.err.println("X - " + ex.getMessage());
+            logger.severe("X - " + ex.getMessage());
         }
         return "/";
     }
@@ -232,15 +236,15 @@ public class SyncCertificatesVault {
                 secrets.put(certificate.getName(), content);
                 // Write operation
                 vault.logical().write(vaultPath + dynamicPath(dynamicPath, domain) + domain, secrets);
-                System.out.println("V - Send file " + certificate.getName() + " to " + vaultPath + dynamicPath(dynamicPath, domain) + domain + " -> " + vaultAddress);
+                logger.info("V - Send file " + certificate.getName() + " to " + vaultPath + dynamicPath(dynamicPath, domain) + domain + " -> " + vaultAddress);
             } else {
                 // Delete operation
                 vault.logical().delete(vaultPath + dynamicPath(dynamicPath, domain) + domain);
-                System.out.println("V - Delete secret " + vaultPath + dynamicPath(dynamicPath, domain) + domain + " -> " + vaultAddress);
+                logger.info("V - Delete secret " + vaultPath + dynamicPath(dynamicPath, domain) + domain + " -> " + vaultAddress);
             }
 
         } catch (VaultException | IOException ex) {
-            System.err.println("X - " + ex.getMessage());
+            logger.severe("X - " + ex.getMessage());
         }
 
     }
@@ -291,7 +295,7 @@ public class SyncCertificatesVault {
             vault = getVault(vaultToken, vaultAddress);
             list = vault.logical().list(vaultPath).getListData();
         } catch (VaultException ex) {
-            System.err.println("X - " + ex.getMessage());
+            logger.severe("X - " + ex.getMessage());
         }
         return list;
     }
@@ -319,11 +323,11 @@ public class SyncCertificatesVault {
                         saveCert(secret.getValue(), certificatesPath, domain, secret.getKey());
                     }
                 } else {
-                    System.out.println("X - File creation skipped: " + secret.getKey());
+                    logger.info("X - File creation skipped: " + secret.getKey());
                 }
             }
         } catch (VaultException ex) {
-            System.err.println("X - " + ex.getMessage());
+            logger.severe("X - " + ex.getMessage());
         }
 
     }
@@ -339,9 +343,9 @@ public class SyncCertificatesVault {
     private static void saveCert(String content, String certificatesPath, String domain, String fileName) {
         try (FileWriter writer = new FileWriter(certificatesPath + "/" + domain + "/" + fileName)) {
             writer.write(content);
-            System.out.println("V - Saved file: " + fileName + " -> " + certificatesPath + "/" + domain);
+            logger.info("V - Saved file: " + fileName + " -> " + certificatesPath + "/" + domain);
         } catch (IOException ex) {
-            System.err.println("X - " + ex.getMessage());
+            logger.severe("X - " + ex.getMessage());
         }
     }
 
@@ -361,7 +365,7 @@ public class SyncCertificatesVault {
                 cert = new String(Files.readAllBytes(Paths.get(certificatesPath + "/" + domain + "/" + fileName)));
             }
         } catch (IOException ex) {
-            System.err.println("X - " + ex.getMessage());
+            logger.severe("X - " + ex.getMessage());
         }
         return cert;
     }
