@@ -47,12 +47,19 @@ docker build -t redrede/sync-certificates-vault .
 ## Variáveis de Ambiente:
 
 MODE: valor padrão: file2Vault
+
 CERTIFICATES_FOLDER: valor padrão: /etc/letsencrypt/live
+
 CERTIFICATES_EXTENSION: valor padrão: pem
+
 VAULT_ADDRESS: valor padrão: http://172.17.0.1:1234
+
 VAULT_PATH: valor padrão: kv/certificates
+
 VAULT_TOKEN: valor padrão: myroot
+
 DYNAMIC_PATH_FOLDER: valor padrão: /etc/letsencrypt/meta
+
 
 ## Execução:
 
